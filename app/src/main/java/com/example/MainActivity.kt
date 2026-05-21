@@ -114,16 +114,16 @@ fun LoginScreen(viewModel: ParentViewModel) {
                 modifier = Modifier
                     .size(130.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surface)
-                    .border(3.dp, MaterialTheme.colorScheme.secondary, CircleShape)
-                    .padding(8.dp),
+                    .background(Color.White)
+                    .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                    .padding(12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.img_hands_logo_1779306570705),
                     contentDescription = "Vidyartha Portal Emblem",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize().clip(CircleShape)
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
@@ -266,13 +266,13 @@ fun LoginScreen(viewModel: ParentViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f))
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = "Info Icon",
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -280,7 +280,7 @@ fun LoginScreen(viewModel: ParentViewModel) {
                     text = "Please use administrative credentials to login",
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 )
             }
@@ -308,8 +308,11 @@ fun MainPortalScreen(viewModel: ParentViewModel) {
                         contentDescription = "Vidyartha Logo Mini",
                         modifier = Modifier
                             .size(40.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .border(1.5.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                            .padding(4.dp),
+                        contentScale = ContentScale.Fit
                     )
 
                     Spacer(modifier = Modifier.width(12.dp))
@@ -932,14 +935,14 @@ fun ParentItemCard(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f))
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = parent.studentClass,
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primaryContainer
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         )
                     }
@@ -1030,7 +1033,7 @@ fun ParentItemCard(
                 Text(
                     text = parent.timestamp.substringBefore("GMT").ifBlank { "Newly added (Offline)" },
                     fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
                 )
 
                 OutlinedButton(
