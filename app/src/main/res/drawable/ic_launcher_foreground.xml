@@ -3,6 +3,6 @@
     <item
         android:width="66dp"
         android:height="66dp"
-        android:drawable="@drawable/img_hands_logo_1779306570705"
+        android:drawable="@drawable/vidyartha_logo_clean_1779476054665"
         android:gravity="center" />
 </layer-list>

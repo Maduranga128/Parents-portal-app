@@ -113,21 +113,18 @@ fun LoginScreen(viewModel: ParentViewModel) {
             Box(
                 modifier = Modifier
                     .size(130.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
-                    .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                    .padding(12.dp),
+                    .padding(4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_hands_logo_1779306570705),
-                    contentDescription = "Vidyartha Portal Emblem",
+                    painter = painterResource(id = R.drawable.vidyartha_logo_clean_1779476054665),
+                    contentDescription = "Vidyartha College Emblem",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Vidyartha College Parents Portal",
@@ -139,11 +136,11 @@ fun LoginScreen(viewModel: ParentViewModel) {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "VIDYARTHA PARENTS PORTAL",
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 1.5.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                text = "By school technology unit",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 4.dp)
@@ -304,14 +301,9 @@ fun MainPortalScreen(viewModel: ParentViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.img_hands_logo_1779306570705),
+                        painter = painterResource(id = R.drawable.vidyartha_logo_clean_1779476054665),
                         contentDescription = "Vidyartha Logo Mini",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(Color.White)
-                            .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                            .padding(4.dp),
+                        modifier = Modifier.size(38.dp),
                         contentScale = ContentScale.Fit
                     )
 
