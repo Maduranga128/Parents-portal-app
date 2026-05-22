@@ -149,15 +149,6 @@ fun LoginScreen(viewModel: ParentViewModel) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             ),
-            trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        imageVector = if (passwordVisible) Icons.Default.Info else Icons.Default.Lock,
-                        contentDescription = "Toggle password visibility",
-                        tint = Color.White.copy(alpha = 0.5f)
-                    )
-                }
-            },
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = screenHeight * 0.548f) // Precisely matching password field vertical position
