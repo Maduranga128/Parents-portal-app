@@ -90,240 +90,125 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreen(viewModel: ParentViewModel) {
-    Box(
+    BoxWithConstraints(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        // Full screen premium clean background image
+        val screenHeight = maxHeight
+        val screenWidth = maxWidth
+
+        // 1. Set the exact background image uploaded by the user with ContentScale.FillBounds
+        // to make sure it fills the screen completely and preserves the pre-rendered element layout proportions.
         Image(
-            painter = painterResource(id = R.drawable.img_login_bg_clean_1779481676491),
+            painter = painterResource(id = R.drawable.img_login_bg_1779481057713),
             contentDescription = "Login Background",
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
-        Column(
+        // 2. Interactive user name text input overlay
+        // Positioned precisely over the gray box in the background image
+        TextField(
+            value = viewModel.username,
+            onValueChange = { viewModel.username = it },
+            singleLine = true,
+            textStyle = LocalTextStyle.current.copy(
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            ),
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .safeDrawingPadding()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .widthIn(max = 400.dp)
-            ) {
-                // 1. Hands Logo - Centered at the top
-                Image(
-                    painter = painterResource(id = R.drawable.img_hands_logo_final_transparent_1779341456440),
-                    contentDescription = "Vidyartha Hands Logo",
-                    modifier = Modifier
-                        .size(165.dp)
-                        .padding(bottom = 4.dp),
-                    contentScale = ContentScale.Fit
-                )
+                .align(Alignment.TopCenter)
+                .padding(top = screenHeight * 0.415f) // Precisely matching the vertical ratio of the username box
+                .width(screenWidth * 0.74f)          // Precisely matching the horizontal ratio of the box
+                .height(screenHeight * 0.075f)       // Precisely matching the vertical height ratio
+                .testTag("username_input"),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
+            )
+        )
 
-                // 2. Primary Header Text
+        // 3. Interactive password text input overlay
+        // Positioned precisely over the password gray box
+        var passwordVisible by remember { mutableStateOf(false) }
+        TextField(
+            value = viewModel.password,
+            onValueChange = { viewModel.password = it },
+            singleLine = true,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            textStyle = LocalTextStyle.current.copy(
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            ),
+            trailingIcon = {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Default.Info else Icons.Default.Lock,
+                        contentDescription = "Toggle password visibility",
+                        tint = Color.White.copy(alpha = 0.5f)
+                    )
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = screenHeight * 0.548f) // Precisely matching password field vertical position
+                .width(screenWidth * 0.74f)          // Precisely matching password field horizontal width
+                .height(screenHeight * 0.075f)       // Precisely matching height
+                .testTag("password_input"),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
+            )
+        )
+
+        // 4. Clickable Overlay for "sign up" Action
+        // Placed exactly over the pre-rendered Coral Button in the background image
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = screenHeight * 0.745f) // Precisely matching coral button vertical position
+                .width(screenWidth * 0.74f)          // Matching width
+                .height(screenHeight * 0.075f)       // Matching height
+                .clip(RoundedCornerShape(28.dp))     // Match button corner radius
+                .clickable { viewModel.checkLogin() }
+                .testTag("login_button")
+        )
+
+        // 5. High-contrast premium dark error popup overlay (floating transparent badge)
+        viewModel.loginError?.let { error ->
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = screenHeight * 0.65f)
+                    .width(screenWidth * 0.74f)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.Black.copy(alpha = 0.82f))
+                    .border(1.dp, Color(0xFFFC7070).copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                    .padding(12.dp),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
-                    text = "Vidyartha Parents Portal",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 28.sp,
-                        color = Color.White,
-                        letterSpacing = (-0.5).sp
-                    ),
+                    text = error,
+                    color = Color(0xFFFC7070),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center
                 )
-
-                // 3. Subtitle
-                Text(
-                    text = "Powered by vidyartha technology unit",
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontWeight = FontWeight.Light,
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.85f),
-                        letterSpacing = 0.2.sp
-                    ),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                // 4. USER NAME Label & Field
-                Text(
-                    text = "USER NAME",
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        color = Color.White,
-                        letterSpacing = 1.sp
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(start = 12.dp, bottom = 6.dp)
-                )
-
-                TextField(
-                    value = viewModel.username,
-                    onValueChange = { viewModel.username = it },
-                    placeholder = { 
-                        Text(
-                            text = "Enter username", 
-                            color = Color.White.copy(alpha = 0.5f),
-                            fontSize = 15.sp
-                        ) 
-                    },
-                    singleLine = true,
-                    shape = RoundedCornerShape(28.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .testTag("username_input"),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFF8E909D).copy(alpha = 0.62f),
-                        unfocusedContainerColor = Color(0xFF8E909D).copy(alpha = 0.62f),
-                        disabledContainerColor = Color(0xFF8E909D).copy(alpha = 0.40f),
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        cursorColor = Color.White
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // 5. PASSWORD Label & Field
-                Text(
-                    text = "PASSWORD",
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        color = Color.White,
-                        letterSpacing = 1.sp
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(start = 12.dp, bottom = 6.dp)
-                )
-
-                var passwordVisible by remember { mutableStateOf(false) }
-                TextField(
-                    value = viewModel.password,
-                    onValueChange = { viewModel.password = it },
-                    placeholder = { 
-                        Text(
-                            text = "Enter password", 
-                            color = Color.White.copy(alpha = 0.5f),
-                            fontSize = 15.sp
-                        ) 
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                imageVector = if (passwordVisible) Icons.Default.Info else Icons.Default.Lock,
-                                contentDescription = "Toggle password visibility",
-                                tint = Color.White.copy(alpha = 0.7f)
-                            )
-                        }
-                    },
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    singleLine = true,
-                    shape = RoundedCornerShape(28.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .testTag("password_input"),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFF8E909D).copy(alpha = 0.62f),
-                        unfocusedContainerColor = Color(0xFF8E909D).copy(alpha = 0.62f),
-                        disabledContainerColor = Color(0xFF8E909D).copy(alpha = 0.40f),
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        cursorColor = Color.White
-                    )
-                )
-
-                viewModel.loginError?.let { error ->
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = error,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(44.dp))
-
-                // 6. sign up Coral Button
-                Button(
-                    onClick = { viewModel.checkLogin() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(54.dp)
-                        .testTag("login_button"),
-                    shape = RoundedCornerShape(28.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFC7070),
-                        contentColor = Color.White
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 2.dp,
-                        pressedElevation = 4.dp
-                    )
-                ) {
-                    Text(
-                        text = "sign up",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = Color.White
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(28.dp))
-
-                // Optional Info Badge
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White.copy(alpha = 0.15f))
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = "Info Icon",
-                        tint = Color.White.copy(alpha = 0.9f),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Please use administrative credentials to login",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 11.sp,
-                            color = Color.White
-                        )
-                    )
-                }
             }
         }
     }
