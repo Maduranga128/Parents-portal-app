@@ -100,98 +100,187 @@ fun LoginScreen(viewModel: ParentViewModel) {
         // 1. Set the exact background image uploaded by the user with ContentScale.FillBounds
         // to make sure it fills the screen completely and preserves the pre-rendered element layout proportions.
         Image(
-            painter = painterResource(id = R.drawable.img_login_bg_1779481057713),
+            painter = painterResource(id = R.drawable.img_login_bg_clean_1779481676491),
             contentDescription = "Login Background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
 
-        // 2. Interactive user name text input overlay
-        // Positioned precisely over the gray box in the background image
-        TextField(
-            value = viewModel.username,
-            onValueChange = { viewModel.username = it },
-            singleLine = true,
-            textStyle = LocalTextStyle.current.copy(
+        // 2. Beautiful responsive layout centered on screen matching the reference image's typography and placements exactly
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = screenWidth * 0.09f, vertical = screenHeight * 0.04f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.height(screenHeight * 0.03f))
+
+            // Vidyartha Parents Portal Header Title
+            Text(
+                text = "Vidyartha Parents Portal",
                 color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            ),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = screenHeight * 0.415f) // Precisely matching the vertical ratio of the username box
-                .width(screenWidth * 0.74f)          // Precisely matching the horizontal ratio of the box
-                .height(screenHeight * 0.075f)       // Precisely matching the vertical height ratio
-                .testTag("username_input"),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                cursorColor = Color.White,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                fontSize = 24.sp,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
-        )
 
-        // 3. Interactive password text input overlay
-        // Positioned precisely over the password gray box
-        var passwordVisible by remember { mutableStateOf(false) }
-        TextField(
-            value = viewModel.password,
-            onValueChange = { viewModel.password = it },
-            singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            textStyle = LocalTextStyle.current.copy(
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            ),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = screenHeight * 0.548f) // Precisely matching password field vertical position
-                .width(screenWidth * 0.74f)          // Precisely matching password field horizontal width
-                .height(screenHeight * 0.075f)       // Precisely matching height
-                .testTag("password_input"),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                cursorColor = Color.White,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Subtitle
+            Text(
+                text = "Powered by vidyartha technology unit",
+                color = Color.White.copy(alpha = 0.8f),
+                fontSize = 11.sp,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
-        )
 
-        // 4. Clickable Overlay for "sign up" Action
-        // Placed exactly over the pre-rendered Coral Button in the background image
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = screenHeight * 0.745f) // Precisely matching coral button vertical position
-                .width(screenWidth * 0.74f)          // Matching width
-                .height(screenHeight * 0.075f)       // Matching height
-                .clip(RoundedCornerShape(28.dp))     // Match button corner radius
-                .clickable { viewModel.checkLogin() }
-                .testTag("login_button")
-        )
+            Spacer(modifier = Modifier.height(screenHeight * 0.07f))
 
-        // 5. High-contrast premium dark error popup overlay (floating transparent badge)
+            // USER NAME INPUT BLOCK
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "USER NAME",
+                    color = Color.White,
+                    fontSize = 13.sp,
+                    fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 12.dp, bottom = 8.dp)
+                )
+
+                // Complete high-fidelity cement gray capsule text field matching image_3.png
+                androidx.compose.foundation.text.BasicTextField(
+                    value = viewModel.username,
+                    onValueChange = { viewModel.username = it },
+                    singleLine = true,
+                    textStyle = androidx.compose.ui.text.TextStyle(
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .testTag("username_input"),
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .background(Color(0xFF9194A0).copy(alpha = 0.85f), RoundedCornerShape(28.dp))
+                                .padding(horizontal = 24.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (viewModel.username.isEmpty()) {
+                                Text(
+                                    text = "Enter username",
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    fontSize = 15.sp
+                                )
+                            }
+                            innerTextField()
+                        }
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // PASSWORD INPUT BLOCK
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "PASSWORD",
+                    color = Color.White,
+                    fontSize = 13.sp,
+                    fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 12.dp, bottom = 8.dp)
+                )
+
+                // Beautiful grey password capsule text box matching image_3.png
+                androidx.compose.foundation.text.BasicTextField(
+                    value = viewModel.password,
+                    onValueChange = { viewModel.password = it },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    textStyle = androidx.compose.ui.text.TextStyle(
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .testTag("password_input"),
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .background(Color(0xFF9194A0).copy(alpha = 0.85f), RoundedCornerShape(28.dp))
+                                .padding(horizontal = 24.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (viewModel.password.isEmpty()) {
+                                Text(
+                                    text = "Enter password",
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    fontSize = 15.sp
+                                )
+                            }
+                            innerTextField()
+                        }
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(screenHeight * 0.07f))
+
+            // Coral salmon button with centered "sign up" lowercase text matching reference image exactly
+            Button(
+                onClick = { viewModel.checkLogin() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .testTag("login_button"),
+                shape = RoundedCornerShape(28.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF7471), // Pink / coral color matching reference image_3.png
+                    contentColor = Color.White
+                ),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    text = "sign up",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(screenHeight * 0.02f))
+        }
+
+        // 3. Floating high-contrast premium dark error popup overlay (floating transparent badge)
         viewModel.loginError?.let { error ->
             Box(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = screenHeight * 0.65f)
-                    .width(screenWidth * 0.74f)
+                    .width(screenWidth * 0.82f)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.Black.copy(alpha = 0.82f))
+                    .background(Color.Black.copy(alpha = 0.85f))
                     .border(1.dp, Color(0xFFFC7070).copy(alpha = 0.5f), RoundedCornerShape(12.dp))
-                    .padding(12.dp),
+                    .padding(14.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
